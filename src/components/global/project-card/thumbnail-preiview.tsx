@@ -1,4 +1,5 @@
 import { Slide, Theme } from '@/lib/types'
+import { cn } from '@/lib/utils'
 import { Image } from 'lucide-react'
 
 import React from 'react'

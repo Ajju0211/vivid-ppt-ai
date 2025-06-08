@@ -2,6 +2,7 @@ import { Project } from '@/generated/prisma'
 import { containerVariats } from '@/lib/constants'
 import { motion }  from 'framer-motion'
 import React from 'react'
+import ProjectCard from '../project-card'
 
 type Props = {
     projects: Project[]
@@ -20,10 +21,7 @@ const Projects = ({projects}: Props) => {
             createdAt = {project?.createdAt.toString()}
             isDeleted = {project?.isDeleted}
             slideData = {project?.slides}
-            src = {
-                project.thumbnail || 
-                'https://wallpaperheart.com/wp-content/uploads/2018/04/free-abstract-and-textures-powerpoint-cool-background-images-for-powerpoint-presentation.jpg'
-            }
+            themeName={project.themeName}
             />
         ))}
 

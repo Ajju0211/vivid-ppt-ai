@@ -60,14 +60,20 @@ export interface ContentItem {
 }
 
 export interface Theme {
-    name: string;
-    fontFamily: string;
-    fontColor: string;
-    backgroundColor: string;
-    slidesBackgroundColor: string;
-    accentColor: string;
-    gradientBackground?: string;
-    slidebarColor?: string;
-    navbarColor: string;
-    type: "light" | "dark"
+  name: string;
+  fontFamily: string;
+  fontColor: string;
+  backgroundColor: string;
+  slideBackgroundColor: string;
+  accentColor: string;
+  gradientBackground?: string;
+  sidebarColor?: string;
+  navbarColor?: string;
+  type: 'light' | 'dark';
+}
+
+export interface OutlinedCard {
+    title: string
+    id: string
+    order: number
 }

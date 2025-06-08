@@ -1,3 +1,5 @@
+'use client'
+
 import { JsonValue } from "@/generated/prisma/runtime/library";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -106,10 +108,10 @@ const ProjectCard = ({
         className="ralative aspect-[16/10] overflow-hidden rounded-lg cursor-pointer"
         onClick={hanndleNavigation}
       >
-        <ThumbnailPreview
+        {/* <ThumbnailPreview
           theme={theme}
           // slides={JSON.parse(JSON.stringify(slideData))?.[0]}
-        />
+        /> */}
       </div>
 
       <div className="w-full">

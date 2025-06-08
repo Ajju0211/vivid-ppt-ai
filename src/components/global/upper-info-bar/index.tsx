@@ -9,7 +9,6 @@ import NewProjectButton from "./new-projects-button";
 
 type Props = {
   user: User;
-  children: React.ReactNode;
 };
 
 function UpperInfoBar({ user }: Props) {
