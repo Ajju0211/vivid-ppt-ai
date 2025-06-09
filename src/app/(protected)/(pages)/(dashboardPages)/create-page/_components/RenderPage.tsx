@@ -4,12 +4,19 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import usePromptStore from "@/store/usePromptStore";
 import CreatePage from "./CreatePage/CreatePage";
+import CreateAI from "./GenerateAI/CreativeAI";
 
 type Props = {};
 
 const RenderPage = (props: Props) => {
   const router = useRouter();
+
   const { page, setPage } = usePromptStore();
+
+
+  const handleBack = () => {
+    setPage('create')
+  }
   const handleSelectOption = ( option: string ) => {
     if(option === 'templete'){
         router.push('/templets')
@@ -27,7 +34,7 @@ const RenderPage = (props: Props) => {
         case 'create-scratch':
             return <></>
         case 'creative-ai':
-            return <></>
+            return <CreateAI onBack={handleBack} />
         default:
             return null
     }
