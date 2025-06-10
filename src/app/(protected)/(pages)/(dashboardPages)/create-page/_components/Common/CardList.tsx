@@ -142,6 +142,24 @@ const CardList = ({
 
     }
 
+    const onAddCard = (index: number) => {
+        const newCard: OutlinedCard = {
+            id: Math.random().toString(36).substring(2,9),
+            title: editText || 'New Section',
+            order: (index !== undefined ? index + 1 : outline.length) +1 
+        }
+
+        const updatedCards = 
+        index !== undefined ? [
+            ...outline.slice(0, index + 1),
+            newCard,
+            ...outline.slice(index+1)
+            .map((card) => ({ ...card, order: card.order + 1})),
+        ] : [...outline, newCard]
+
+        addMultipleOutlines(updatedCards)
+        setEditText('')
+    }
 
     return (
         <motion.div
