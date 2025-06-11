@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { use, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { containerVariats, itemVarients } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
@@ -63,8 +63,13 @@ const CreateAI = ({ onBack }: Props) => {
     }
 
     const handleGenerate = () => {
-
+        
     }
+
+    useEffect(() => {
+        setNoOfCards(outlines.length)
+    },[outlines.length])
+
     return (
         <motion.div
             className='space-y-6 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:p-8'
