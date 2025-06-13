@@ -15,6 +15,11 @@ import usePromptStore from '@/store/usePromptStore'
 import RecentPrompts from './RecentPrompt'
 import { toast } from 'sonner'
 import { generateCreativePrompt } from '@/actions/generativeAI'
+import { OutlinedCard } from '@/lib/types'
+import { v4 } from 'uuid'
+import { createProject } from '@/actions/projects'
+import { useSlideStore } from '@/store/useSlideStore'
+
 
 type Props = {
     onBack: () => void,
@@ -23,7 +28,9 @@ type Props = {
 
 const CreateAI = ({ onBack }: Props) => {
 
+
     const router = useRouter()
+    const { setProject } = useSlideStore()
     const { resetOutline,
         currentAiPrompt,
         setCurrentAiPrompt,
@@ -47,7 +54,23 @@ const CreateAI = ({ onBack }: Props) => {
 
         setIsGenerating(true)
         const res = await generateCreativePrompt(currentAiPrompt)
-
+        if (res.status === 200 && res?.data?.outlines) {
+            const cardsData: OutlinedCard[] = []
+            res.data?.outlines.map((outlines: string, idx: number) => {
+                const newCard = {
+                    id: v4(),
+                    title: outlines,
+                    order: idx + 1,
+                }
+                cardsData.push(newCard)
+            })
+            addMultipleOutlines(cardsData)
+            setNoOfCards(cardsData.length)
+            toast.success('Success', { description: 'Outlines generated successfully'})
+        } else {
+            toast.error('Error', { description: 'Failed to generate outline. Please try again.'})
+        }
+        setIsGenerating(false)
      }
     const resetCards = () => {
         setEditingCard(null)
@@ -62,8 +85,46 @@ const CreateAI = ({ onBack }: Props) => {
         onBack()
     }
 
-    const handleGenerate = () => {
-        
+    const handleGenerate = async () => {
+        setIsGenerating(true)
+        if(outlines.length === 0 ) {
+             toast.error('Error', { description: 'Failed to generate outline. Please try again.'})
+             return
+        }
+        try {
+            const res = await createProject(currentAiPrompt, 
+                outlines.slice(0, noOfCards)
+            )
+            if(res?.status !== 200 || !res.data) {
+                throw new Error('Unable to create project')
+            }
+
+            router.push(`/presentation/${res.data.id}/select-theme`)
+            setProject(res.data)
+
+
+            addPrompt({
+                id: v4(),
+                title: currentAiPrompt || outlines?.[0]?.title,
+                outlines: outlines,
+                createdAt: new Date().toISOString(),
+            })
+
+            toast.success('Success', {
+                description: 'Project created successfully!'
+            })
+
+            setCurrentAiPrompt('')
+            resetOutline()
+        } catch (err) {
+            console.log(err)
+            toast.error('Error', {
+                description: 'Failed to create project'
+            })
+            
+        } finally {
+            setIsGenerating(false)
+        }
     }
 
     useEffect(() => {

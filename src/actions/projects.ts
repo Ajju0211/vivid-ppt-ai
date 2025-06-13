@@ -170,3 +170,24 @@ export const createProject = async (
 
 
 }
+
+export const getProjectById = async (projectId: string) => {
+    try {
+        const checkUser = await onAuthenticateuser()
+        if (checkUser.status !== 200 || !checkUser.user){
+            return { status: 403, error: ' User not authenticated'}
+        }
+        
+        const project = await client.project.findFirst({
+            where: {id: projectId},
+        })
+
+        if(!project) {
+            return { status: 404, error: 'Project not found'}
+        }
+        return { status: 200, data: project}
+    } catch (err) {
+        console.error('🔴 ERROR', err)
+        return { status: 500, error: 'Internal sever error'}
+    }
+}

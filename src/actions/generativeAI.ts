@@ -3,8 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
 export const generateCreativePrompt = async (userPrompt: string) => {
-    const apiKey: any = process.env.GEMINI_API;
-        const genAI = new GoogleGenerativeAI(apiKey);
+    const apiKey: any = process.env.GEMINI_API_KEY;
+    const genAI = new GoogleGenerativeAI(apiKey);
     const finalPrompt = `
     Create a coherent and relevant outline for the following prompt: ${userPrompt}.
     The outline should consist of at least 6 point, with each point written as a single sentence.
@@ -27,17 +27,23 @@ export const generateCreativePrompt = async (userPrompt: string) => {
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const result = await model.generateContent(finalPrompt);
-        if(result.response.text())  {
+        const response = result.response.text()
+
+        if (response) {
             try {
-                const jsonResponse = JSON.parse(result.response.text())
-
-            }  catch (error) {
-
+                const cleanedResponse = response.replace(/```json|```/g, '').trim();
+                const responseContent = JSON.parse(cleanedResponse)
+                return { status: 200, data: responseContent }
+            } catch (err) {
+                console.log('Invalid Json received', response)
+                return { status: 500, error: "Invalid Json format received from AI" }
             }
         }
-        return result.response.text()
+        return { status: 400, error: "No content generated" }
 
     } catch (err) {
+        console.log('🔴 ERROR', err)
+        return { status: 500, error: 'Internal server error' }
 
     }
 }
